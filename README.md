@@ -2,9 +2,7 @@
 
 - H01: $G$ is a group, $G$ is cyclic, $G$ is infinite, then $G \cong (\mathbb Z, +)$.
 
-- H02: $F$ is a field, $g \in F$, $g$ has a minimal polynomial $p(x) \in F[X]$. then $F[g] \cong F[X]/(p)$.
-
-  - In particular, it is finite. 
+- H02: $E / F$ is a field extension, $g \in E$, if $g$ is algebraic over $F$, then $F[g]$ is finite dimensional over $F$.
 
 - H03: $F$ is a field, $F^\times \cong (\mathbb Z, +)$, then $\mathrm{char} F = 2$.
 
