@@ -1,5 +1,8 @@
 import Mathlib
 
+open Set
+
+
 -- H01: If G is an infinite cyclic group, then G ≅ ℤ
 lemma infinite_cyclic_group_iso_int (G : Type*) [Group G] [IsCyclic G] [Infinite G] :
   Nonempty (G ≃* Multiplicative ℤ) :=
@@ -49,7 +52,37 @@ theorem finite_field_of_cyclic_units (F : Type*) [Field F] [IsCyclic Fˣ] :
   -- Assume F is infinite
   haveI : Infinite F := not_finite_iff_infinite.mp h_infinite
   -- Then Fˣ is infinite
-  haveI : Infinite Fˣ := sorry
+  haveI : Infinite Fˣ :=by
+    -- 反证法：假设单位群有限
+    haveI k₁: Infinite F := not_finite_iff_infinite.mp h_infinite
+    by_contra h_finite_unit
+    -- 获取单位群有限的实例
+    have : Finite Fˣ := Finite.of_not_infinite h_finite_unit
+    -- 将整个域分解为零元素和单位群的并集
+    have : (univ : Set F) = {0} ∪ (Set.range (Units.val : Fˣ → F)) := by
+      ext x
+      simp [Units.exists_iff_ne_zero]  -- 利用域的性质：元素要么为零要么为单位
+      by_cases x=0 
+      · left
+        (expose_names; exact h)
+      · right
+        have p₁:x ≠ 0:=by 
+          (expose_names; exact h)
+        refine CanLift.prf x ?_
+        simp
+        exact p₁
+    have set_finite : Set.Finite (univ : Set F) := by
+      rw [this]  -- 应用集合分解
+      apply Set.Finite.union
+      · exact finite_singleton 0  -- 单点集{0}有限
+      · have p₁:Function.Injective (Units.val : Fˣ → F):=by
+          exact Units.ext
+        have p₂:=Finite.of_injective_finite_range p₁
+        exact finite_range Units.val
+    -- 与域的无限性假设矛盾
+    have : Set.Infinite (univ : Set F) :=by
+      exact infinite_univ_iff.mpr k₁
+    exact this set_finite
   -- Then Fˣ ≅ ℤ by H01
   have h_iso : Nonempty (Fˣ ≃* Multiplicative ℤ) := units_iso_int F
   -- Then char F = 2 by H03
