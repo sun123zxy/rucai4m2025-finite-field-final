@@ -10,8 +10,8 @@ sorry
 -- H02: E/F is a field extension, g ∈ E, if g is algebraic over F,
 -- then F[g] is finite dimensional over F
 lemma adjoin_finite_of_algebraic (F E : Type*) [Field F] [Field E] [Algebra F E] (g : E)
-    (h : IsAlgebraic F g) : FiniteDimensional F (IntermediateField.adjoin F {g}) :=
-sorry
+    (h : IsIntegral F g) : FiniteDimensional F (IntermediateField.adjoin F {g}) := by
+    refine IntermediateField.adjoin.finiteDimensional h
 
 -- Helper lemma: If F is a field of characteristic 2 and Fˣ is cyclic, then F is finite
 lemma finite_of_char_two_cyclic (F : Type*) [Field F] [CharP F 2] [IsCyclic Fˣ] :
@@ -24,7 +24,7 @@ lemma finite_of_char_two_cyclic (F : Type*) [Field F] [CharP F 2] [IsCyclic Fˣ]
   obtain ⟨g, hg : ∀ x : Fˣ, x ∈ Subgroup.zpowers g⟩ := @IsCyclic.exists_generator Fˣ _ _
 
   -- Then g is algebraic over 𝔽₂
-  have g_algebraic : IsAlgebraic (ZMod 2) (g.val : F) := sorry
+  have g_integral : IsIntegral (ZMod 2) (g.val : F) := sorry
 
   -- Then F = 𝔽₂[g]
   have field_eq : (⊤ : IntermediateField (ZMod 2) F) =
@@ -32,7 +32,7 @@ lemma finite_of_char_two_cyclic (F : Type*) [Field F] [CharP F 2] [IsCyclic Fˣ]
 
   -- Conclude that F is finite, by H02
   haveI : FiniteDimensional (ZMod 2) (IntermediateField.adjoin (ZMod 2) {g.val}) :=
-    adjoin_finite_of_algebraic (ZMod 2) F g.val g_algebraic
+    adjoin_finite_of_algebraic (ZMod 2) F g.val g_integral
 
   -- Since F = 𝔽₂[g] and 𝔽₂[g] is finite dimensional over 𝔽₂, F is finite dimensional
   haveI : FiniteDimensional (ZMod 2) F := sorry
@@ -80,7 +80,7 @@ theorem finite_field_of_cyclic_units (F : Type*) [Field F] [IsCyclic Fˣ] :
       exact infinite_univ_iff.mpr k₁
     exact this set_finite
 
-  -- Then Fˣ ≅ ℤ by H01 (all non-identity elements have infinite order)
+   -- Then Fˣ ≅ ℤ by H01 (all non-identity elements have infinite order)
   have h_infinite_order := infinite_cyclic_group_infinite_order Fˣ
 
   -- Then char F = 2 (use h_infinite_order)
