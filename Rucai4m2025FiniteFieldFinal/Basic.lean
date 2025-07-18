@@ -2,7 +2,7 @@ import Mathlib
 
 -- H01: If G is an infinite cyclic group, then G ≅ ℤ
 lemma infinite_cyclic_group_iso_int (G : Type*) [Group G] [IsCyclic G] [Infinite G] :
-  Nonempty (G ≃* ℤ) :=
+  Nonempty (G ≃* Multiplicative ℤ) :=
 sorry
 
 -- H02: E/F is a field extension, g ∈ E, if g is algebraic over F,
@@ -12,13 +12,13 @@ lemma adjoin_finite_of_algebraic (F E : Type*) [Field F] [Field E] [Algebra F E]
 sorry
 
 -- H03: If F is a field and Fˣ ≅ ℤ, then char F = 2
-lemma char_two_of_units_iso_int (F : Type*) [Field F] (h : Nonempty (Fˣ ≃* ℤ)) :
+lemma char_two_of_units_iso_int (F : Type*) [Field F] (h : Nonempty (Fˣ ≃* Multiplicative ℤ)) :
   CharP F 2 :=
 sorry
 
 -- Helper lemma: If Fˣ is infinite and cyclic, then Fˣ ≅ ℤ
 lemma units_iso_int (F : Type*) [Field F] [IsCyclic Fˣ] [Infinite Fˣ] :
-  Nonempty (Fˣ ≃* ℤ) :=
+  Nonempty (Fˣ ≃* Multiplicative ℤ) :=
 infinite_cyclic_group_iso_int Fˣ
 
 -- Helper lemma: If F is a field of characteristic 2 and Fˣ is cyclic, then F is finite
@@ -51,7 +51,7 @@ theorem finite_field_of_cyclic_units (F : Type*) [Field F] [IsCyclic Fˣ] :
   -- Then Fˣ is infinite
   haveI : Infinite Fˣ := sorry
   -- Then Fˣ ≅ ℤ by H01
-  have h_iso : Nonempty (Fˣ ≃* ℤ) := units_iso_int F
+  have h_iso : Nonempty (Fˣ ≃* Multiplicative ℤ) := units_iso_int F
   -- Then char F = 2 by H03
   haveI : CharP F 2 := char_two_of_units_iso_int F h_iso
   -- Then F is finite by H04 and the fact that char 2 + cyclic units implies finite field
