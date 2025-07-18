@@ -82,6 +82,11 @@ lemma finite_of_char_two_cyclic (F : Type*) [Field F] [CharP F 2] [IsCyclic Fˣ]
       simp only at hn
       rw [← hn] at hg₁
 
+      have n_ne_zero : n ≠ 0 := by
+        intro h
+        rw [h] at hg₁
+        simp at hg₁
+
       by_cases n_neg : n < 0
       · let n' := (-n).toNat
         apply_fun (fun x => x * g.val ^ (-n)) at hg₁
@@ -96,7 +101,15 @@ lemma finite_of_char_two_cyclic (F : Type*) [Field F] [CharP F 2] [IsCyclic Fˣ]
         simp at hg₁
         use (Polynomial.X ^ (1 + n') + Polynomial.X ^ n' - 1)
         constructor
-        · sorry
+        · intro tmp
+          apply_fun fun f => f.aeval (0 : F) at tmp
+          simp at tmp
+          haveI : n' ≠ 0 := by
+            unfold n'
+            simp only [ne_eq, Int.toNat_eq_zero, Left.neg_nonpos_iff, not_le]
+            linarith
+          rw [zero_pow this] at tmp
+          simp at tmp
         · simp [hg₁]
           ring
 
@@ -107,7 +120,18 @@ lemma finite_of_char_two_cyclic (F : Type*) [Field F] [CharP F 2] [IsCyclic Fˣ]
       use (Polynomial.X ^ n' - Polynomial.X - 1)
       simp only [ne_eq, map_sub, map_pow, Polynomial.aeval_X, hg₁, add_sub_cancel_right, map_one,
         sub_self, and_true]
-      sorry
+      intro tmp
+
+      apply_fun fun f => f.aeval (0 : F) at tmp
+      simp at tmp
+      haveI : n' ≠ 0 := by
+        unfold n'
+        by_contra! h
+        apply n_ne_zero
+        rw [← Int.toNat_of_nonneg n_neg, h]
+        simp
+      rw [zero_pow this] at tmp
+      simp at tmp
 
   -- Then F = 𝔽₂[g]
   have field_eq : (⊤ : IntermediateField (ZMod 2) F) =
