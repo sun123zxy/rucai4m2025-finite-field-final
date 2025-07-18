@@ -79,8 +79,8 @@ theorem finite_field_of_cyclic_units (F : Type*) [Field F] [IsCyclic Fˣ] :
     have : Set.Infinite (univ : Set F) :=by
       exact infinite_univ_iff.mpr k₁
     exact this set_finite
-   -- Then Fˣ ≅ ℤ by H01 (all non-identity elements have infinite order)
 
+  -- Then Fˣ ≅ ℤ by H01 (all non-identity elements have infinite order)
   have h_infinite_order := infinite_cyclic_group_infinite_order Fˣ
 
   -- Then char F = 2 (use h_infinite_order)
