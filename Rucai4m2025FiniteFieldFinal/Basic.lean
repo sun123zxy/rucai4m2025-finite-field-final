@@ -1,8 +1,8 @@
 import Mathlib
 
--- H01: If G is an infinite cyclic group, then G ≅ ℤ
-lemma infinite_cyclic_group_iso_int (G : Type*) [Group G] [IsCyclic G] [Infinite G] :
-  Nonempty (G ≃* Multiplicative ℤ) :=
+-- H01: If G is an infinite cyclic group, then all elements of G have infinite order
+lemma infinite_cyclic_group_infinite_order (G : Type*) [Group G] [IsCyclic G] [Infinite G] :
+  ∀ g : G, g ≠ 1 → orderOf g = 0 :=
 sorry
 
 -- H02: E/F is a field extension, g ∈ E, if g is algebraic over F,
@@ -10,16 +10,6 @@ sorry
 lemma adjoin_finite_of_algebraic (F E : Type*) [Field F] [Field E] [Algebra F E] (g : E)
     (h : IsAlgebraic F g) : FiniteDimensional F (IntermediateField.adjoin F {g}) :=
 sorry
-
--- H03: If F is a field and Fˣ ≅ ℤ, then char F = 2
-lemma char_two_of_units_iso_int (F : Type*) [Field F] (h : Nonempty (Fˣ ≃* Multiplicative ℤ)) :
-  CharP F 2 :=
-sorry
-
--- Helper lemma: If Fˣ is infinite and cyclic, then Fˣ ≅ ℤ
-lemma units_iso_int (F : Type*) [Field F] [IsCyclic Fˣ] [Infinite Fˣ] :
-  Nonempty (Fˣ ≃* Multiplicative ℤ) :=
-infinite_cyclic_group_iso_int Fˣ
 
 -- Helper lemma: If F is a field of characteristic 2 and Fˣ is cyclic, then F is finite
 lemma finite_of_char_two_cyclic (F : Type*) [Field F] [CharP F 2] [IsCyclic Fˣ] :
@@ -49,11 +39,11 @@ theorem finite_field_of_cyclic_units (F : Type*) [Field F] [IsCyclic Fˣ] :
   -- Assume F is infinite
   haveI : Infinite F := not_finite_iff_infinite.mp h_infinite
   -- Then Fˣ is infinite
-  haveI : Infinite Fˣ := sorry
-  -- Then Fˣ ≅ ℤ by H01
-  have h_iso : Nonempty (Fˣ ≃* Multiplicative ℤ) := units_iso_int F
-  -- Then char F = 2 by H03
-  haveI : CharP F 2 := char_two_of_units_iso_int F h_iso
+  haveI : Infinite Fˣ := by sorry
+  -- Then Fˣ ≅ ℤ by H01 (all non-identity elements have infinite order)
+  have h_infinite_order := infinite_cyclic_group_infinite_order Fˣ
+  -- Then char F = 2 (use h_infinite_order)
+  haveI : CharP F 2 := sorry
   -- Then F is finite by H04 and the fact that char 2 + cyclic units implies finite field
   have h_finite : Finite F := finite_of_char_two_cyclic F
   -- Contradiction with our assumption that F is infinite
