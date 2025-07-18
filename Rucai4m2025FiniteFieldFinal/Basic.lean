@@ -16,11 +16,6 @@ lemma char_two_of_units_iso_int (F : Type*) [Field F] (h : Nonempty (Fˣ ≃* �
   CharP F 2 :=
 sorry
 
--- H04: If F is a field of characteristic 2, then Fˣ is cyclic
-lemma units_cyclic_of_char_two (F : Type*) [Field F] [CharP F 2] :
-  IsCyclic Fˣ :=
-sorry
-
 -- Helper lemma: If Fˣ is infinite and cyclic, then Fˣ ≅ ℤ
 lemma units_iso_int (F : Type*) [Field F] [IsCyclic Fˣ] [Infinite Fˣ] :
   Nonempty (Fˣ ≃* ℤ) :=
