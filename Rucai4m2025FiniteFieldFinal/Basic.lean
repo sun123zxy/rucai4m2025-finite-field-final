@@ -135,8 +135,26 @@ lemma finite_of_char_two_cyclic (F : Type*) [Field F] [CharP F 2] [IsCyclic Fˣ]
 
   -- Then F = 𝔽₂[g]
   have field_eq : (⊤ : IntermediateField (ZMod 2) F) =
-    IntermediateField.adjoin (ZMod 2) {g.val} := sorry
-
+    IntermediateField.adjoin (ZMod 2) {g.val} := by
+    ext x
+    constructor
+    · intro _
+      by_cases hx_zero : x = 0
+      · rw [hx_zero]
+        exact IntermediateField.zero_mem (IntermediateField.adjoin (ZMod 2) {g.val})
+      · -- x ≠ 0, so x ∈ Fˣ
+        have x_unit : IsUnit x := FiniteDimensional.isUnit F hx_zero
+        obtain ⟨u, hu⟩ := x_unit
+        -- u ∈ Fˣ, so u = g^k for some k
+        obtain ⟨k, hk⟩ := hg u
+        rw [← hu, ← hk]
+        -- g^k ∈ 𝔽₂[g]
+        simp only [Units.val_zpow_eq_zpow_val]
+        apply IntermediateField.pow_mem
+        apply IntermediateField.subset_adjoin
+        simp only [mem_singleton_iff]
+    · intro hx
+      simp only [IntermediateField.mem_top]
   -- Conclude that F is finite, by H02
   haveI : FiniteDimensional (ZMod 2) (IntermediateField.adjoin (ZMod 2) {g.val}) :=
     adjoin_finite_of_integral (ZMod 2) F g.val g_integral
