@@ -4,12 +4,14 @@ open Set
 
 lemma finite_of_finite_units (F : Type*) [Field F] [Finite Fˣ] : Finite F := by
   -- Show that F = Fˣ ∪ {0}
-  have h_eq : (Set.univ : Set F) = (Set.range Units.val) ∪ {0} := by
+  have h_eq : (Set.univ : Set F) = Set.range Units.val ∪ {0} := by
     ext x
     simp only [mem_univ, union_singleton, mem_insert_iff, mem_range, true_iff]
     by_cases hx_zero : x = 0
-    · left; assumption
-    · right; exact FiniteDimensional.isUnit F hx_zero
+    · left
+      assumption
+    · right
+      exact FiniteDimensional.isUnit F hx_zero
   -- Therefore F is finite
   rw [← Set.finite_univ_iff, h_eq]
   apply Set.Finite.union
@@ -18,8 +20,8 @@ lemma finite_of_finite_units (F : Type*) [Field F] [Finite Fˣ] : Finite F := by
 
 -- H01: If G is an infinite cyclic group, then all elements of G have infinite order
 lemma orderOf_eq_zero_of_cyclic_of_infinite (G : Type*) [Group G] [IsCyclic G] [Infinite G] :
-  ∀ g : G, g ≠ 1 → orderOf g = 0 := by
-  -- First acquire a generator g satisfying the conclusion.
+    ∀ g : G, g ≠ 1 → orderOf g = 0 := by
+  -- First acquire a generator g satisfying the conclusion
   rcases @IsCyclic.exists_generator G _ _ with ⟨g, hg⟩
   intro u hu
   have : orderOf g = 0 := by
@@ -36,19 +38,30 @@ lemma orderOf_eq_zero_of_cyclic_of_infinite (G : Type*) [Group G] [IsCyclic G] [
   rw [orderOf_eq_zero_iff'] at this
   contrapose! this
   by_cases zk : k = 0
-  · simp [zk] at hk; exfalso; exact hu (Eq.symm hk)
+  · simp [zk] at hk
+    exfalso
+    exact hu (Eq.symm hk)
   by_cases gk : k > 0
-  · use (Int.toNat k) * n; simp [gk, hn]
-    rw [pow_mul, ← this]; congr 1; rw [← zpow_natCast]; congr 1
+  · use (Int.toNat k) * n
+    simp [gk, hn]
+    rw [pow_mul, ← this]
+    congr 1
+    rw [← zpow_natCast]
+    congr 1
     omega
   have lk : k < 0 := by omega
-  use Int.natAbs k * n; simp [hn]
+  use Int.natAbs k * n
+  simp [hn]
   constructor
   · exact zk
   rw [pow_mul]
   have this' : (g ^ (-k)) ^ n = 1 := by
-    rw [← inv_one, ← this]; group
-  rw [← this']; congr 1; rw [← zpow_natCast]; congr 1
+    rw [← inv_one, ← this]
+    group
+  rw [← this']
+  congr 1
+  rw [← zpow_natCast]
+  congr 1
   omega
 
 lemma simple_extension_of_cyclic_generator
@@ -77,8 +90,7 @@ lemma simple_extension_of_cyclic_generator
 
 -- Partial result: If F is a field of characteristic 2 and Fˣ is cyclic, then F is finite
 lemma finite_of_char_two_of_cyclic (F : Type*) [Field F] [CharP F 2] [IsCyclic Fˣ] :
-  Finite F := by
-
+    Finite F := by
   -- Since char F = 2, we have an algebra structure F over ZMod 2
   haveI : Algebra (ZMod 2) F := ZMod.algebra _ _
 
@@ -117,7 +129,9 @@ lemma finite_of_char_two_of_cyclic (F : Type*) [Field F] [CharP F 2] [IsCyclic F
         repeat rw [←zpow_add] at hg₁
         conv at hg₁ => lhs; simp only [add_neg_cancel, zpow_zero, Units.val_one]
         rw [show -n = n' by
-          unfold n'; simp only [Int.ofNat_toNat, left_eq_sup, Int.neg_nonneg]; linarith] at hg₁
+          unfold n'
+          simp only [Int.ofNat_toNat, left_eq_sup, Int.neg_nonneg]
+          linarith] at hg₁
         norm_cast at hg₁
         simp at hg₁
         use (Polynomial.X ^ (1 + n') + Polynomial.X ^ n' - 1)
@@ -136,11 +150,14 @@ lemma finite_of_char_two_of_cyclic (F : Type*) [Field F] [CharP F 2] [IsCyclic F
 
       push_neg at n_neg
       let n' := n.toNat
-      rw [show n = n' by unfold n'; simp only [Int.ofNat_toNat, left_eq_sup]; linarith] at hg₁
+      rw [show n = n' by
+        unfold n'
+        simp only [Int.ofNat_toNat, left_eq_sup]
+        linarith] at hg₁
       simp only [zpow_natCast, Units.val_pow_eq_pow_val] at hg₁
       use (Polynomial.X ^ n' - Polynomial.X - 1)
-      simp only [ne_eq, map_sub, map_pow, Polynomial.aeval_X, hg₁, add_sub_cancel_right, map_one,
-        sub_self, and_true]
+      simp only [ne_eq, map_sub, map_pow, Polynomial.aeval_X, hg₁,
+        add_sub_cancel_right, map_one, sub_self, and_true]
       intro tmp
 
       apply_fun fun f => f.aeval (0 : F) at tmp
@@ -175,7 +192,7 @@ lemma finite_of_char_two_of_cyclic (F : Type*) [Field F] [CharP F 2] [IsCyclic F
 
 -- Main theorem: If F is a field with cyclic multiplicative group, then F is finite
 theorem finite_field_of_cyclic_units (F : Type*) [Field F] [IsCyclic Fˣ] :
-  Finite F := by
+    Finite F := by
   -- Proof by contradiction
   by_contra h_infinite
 
@@ -188,7 +205,7 @@ theorem finite_field_of_cyclic_units (F : Type*) [Field F] [IsCyclic Fˣ] :
     simp only [not_infinite_iff_finite] at h_infinite
     exact finite_of_finite_units F
 
-  -- Then Fˣ ≅ ℤ by H01 (all non-identity elements have infinite order)
+  -- Then Fˣ ≅ ℤ gives out that all non-identity elements have an infinite order
   have h_infinite_order := orderOf_eq_zero_of_cyclic_of_infinite Fˣ
 
   -- Then char F = 2 (use h_infinite_order)
@@ -218,7 +235,7 @@ theorem finite_field_of_cyclic_units (F : Type*) [Field F] [IsCyclic Fˣ] :
         contradiction
       simp [this]
 
-  -- Then F is finite by H04 and the fact that char 2 + cyclic units implies finite field
+  -- Then F is finite and the fact that char 2 and cyclic units implies finite field
   have h_finite : Finite F := finite_of_char_two_of_cyclic F
 
   -- Contradiction with our assumption that F is infinite
