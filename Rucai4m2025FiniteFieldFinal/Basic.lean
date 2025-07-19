@@ -49,7 +49,7 @@ lemma finite_of_finite_units (F : Type*) [Field F] [Finite Fˣ] : Finite F := by
   · exact Set.finite_range Units.val
   · exact Set.finite_singleton 0
 
-/-- In an infinite cyclic group G, every non-identity element has infinite order.
+/-- In an infinite cyclic group G, every non-identity element has order 0.
     This is because if G is infinite and cyclic, then G ≅ ℤ, and in ℤ every non-zero element
     generates an infinite subgroup. -/
 lemma orderOf_eq_zero_of_cyclic_of_infinite (G : Type*) [Group G] [IsCyclic G] [Infinite G] :
@@ -57,7 +57,7 @@ lemma orderOf_eq_zero_of_cyclic_of_infinite (G : Type*) [Group G] [IsCyclic G] [
   -- First acquire a generator of G
   rcases @IsCyclic.exists_generator G _ _ with ⟨g, hg⟩
   intro u hu
-  -- Show that the generator g has infinite order
+  -- Show that the generator g has order 0
   have : orderOf g = 0 := by
     apply Infinite.orderOf_eq_zero_of_forall_mem_zpowers hg
   -- Any element u can be written as a power of the generator g
@@ -66,7 +66,7 @@ lemma orderOf_eq_zero_of_cyclic_of_infinite (G : Type*) [Group G] [IsCyclic G] [
     simp only [Subgroup.zpowers, Subgroup.mem_mk, mem_range] at gu'
     exact gu'
   rcases gu with ⟨k, hk⟩
-  -- Replace u by g^k and show that g^k also has infinite order
+  -- Replace u by g^k and show that g^k also has order 0
   rw [← hk]
   refine orderOf_eq_zero_iff'.mpr ?_
   intro n hn
@@ -245,7 +245,7 @@ lemma Field.finite_of_char_two_of_cyclic_units (F : Type*) [Field F] [CharP F 2]
 
 /-- Every field with a cyclic unit group is finite.
     The proof is by contradiction: if F is infinite with cyclic Fˣ, then all non-identity
-    elements of Fˣ have infinite order, but -1 has order 2 unless char F = 2. So char F = 2,
+    elements of Fˣ have order 0, but -1 has order 2 unless char F = 2. So char F = 2,
     and then F is finite by the previous lemma. -/
 theorem Field.finite_of_cyclic_units (F : Type*) [Field F] [IsCyclic Fˣ] :
     Finite F := by
@@ -260,7 +260,7 @@ theorem Field.finite_of_cyclic_units (F : Type*) [Field F] [IsCyclic Fˣ] :
     simp only [not_infinite_iff_finite] at h_infinite
     exact finite_of_finite_units F
 
-  -- In an infinite cyclic group, all non-identity elements have infinite order
+  -- In an infinite cyclic group, all non-identity elements have order 0
   have h_infinite_order := orderOf_eq_zero_of_cyclic_of_infinite Fˣ
 
   -- But -1 has order 2 unless char F = 2, so char F = 2
