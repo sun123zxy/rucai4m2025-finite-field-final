@@ -142,7 +142,12 @@ lemma finite_of_char_two_cyclic (F : Type*) [Field F] [CharP F 2] [IsCyclic Fˣ]
     adjoin_finite_of_integral (ZMod 2) F g.val g_integral
 
   -- Since F = 𝔽₂[g] and 𝔽₂[g] is finite dimensional over 𝔽₂, F is finite dimensional
-  haveI : FiniteDimensional (ZMod 2) F := sorry
+  haveI : FiniteDimensional (ZMod 2) F := by
+    have iso : (⊤ : IntermediateField (ZMod 2) F) ≃ₐ[ZMod 2] F :=
+      IntermediateField.topEquiv
+    symm at iso
+    rw [field_eq] at iso
+    exact FiniteDimensional.of_injective iso.toLinearMap iso.injective
 
   -- Since 𝔽₂ is finite and F is finite dimensional over 𝔽₂, F is finite
   exact sorry
