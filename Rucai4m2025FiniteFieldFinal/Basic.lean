@@ -5,6 +5,7 @@ open Set
 -- H01: If G is an infinite cyclic group, then all elements of G have infinite order
 lemma infinite_cyclic_group_infinite_order (G : Type*) [Group G] [IsCyclic G] [Infinite G] :
   ∀ g : G, g ≠ 1 → orderOf g = 0 := by
+  -- First acquire a generator g satisfying the conclusion.
   rcases @IsCyclic.exists_generator G _ _ with ⟨g, hg⟩
   intro u hu
   have : orderOf g = 0 := by
@@ -14,36 +15,26 @@ lemma infinite_cyclic_group_infinite_order (G : Type*) [Group G] [IsCyclic G] [I
     simp [Subgroup.zpowers] at gu'
     exact gu'
   rcases gu with ⟨k, hk⟩
+  -- replace u by power of g
   rw [← hk]
   refine orderOf_eq_zero_iff'.mpr ?_
   intro n hn
   rw [orderOf_eq_zero_iff'] at this
   contrapose! this
   by_cases zk : k = 0
-  · simp [zk] at hk
-    exfalso
-    exact hu (Eq.symm hk)
+  · simp [zk] at hk; exfalso; exact hu (Eq.symm hk)
   by_cases gk : k > 0
-  · use (Int.toNat k) * n
-    simp [gk, hn]
-    rw [pow_mul, ← this]
-    congr 1
-    rw [← zpow_natCast]
-    congr 1
+  · use (Int.toNat k) * n; simp [gk, hn]
+    rw [pow_mul, ← this]; congr 1; rw [← zpow_natCast]; congr 1
     omega
   have lk : k < 0 := by omega
-  use Int.natAbs k * n
-  simp [lk, hn]
+  use Int.natAbs k * n; simp [lk, hn]
   constructor
   · exact zk
   rw [pow_mul]
   have this' : (g ^ (-k)) ^ n = 1 := by
-    rw [← inv_one, ← this]
-    group
-  rw [← this']
-  congr 1
-  rw [← zpow_natCast]
-  congr 1
+    rw [← inv_one, ← this]; group
+  rw [← this']; congr 1; rw [← zpow_natCast]; congr 1
   omega
 
 -- H02: E/F is a field extension, g ∈ E, if g is integral over F,
