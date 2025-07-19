@@ -164,8 +164,9 @@ lemma finite_of_char_two_cyclic (F : Type*) [Field F] [CharP F 2] [IsCyclic Fˣ]
     symm at iso
     rw [field_eq] at iso
     exact FiniteDimensional.of_injective iso.toLinearMap iso.injective
-
   -- Since 𝔽₂ is finite and F is finite dimensional over 𝔽₂, F is finite
+  exact Module.finite_of_finite (ZMod 2)
+
 
 -- Main theorem: If F is a field with cyclic multiplicative group, then F is finite
 theorem finite_field_of_cyclic_units (F : Type*) [Field F] [IsCyclic Fˣ] :
