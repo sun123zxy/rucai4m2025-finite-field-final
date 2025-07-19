@@ -212,7 +212,31 @@ theorem finite_field_of_cyclic_units (F : Type*) [Field F] [IsCyclic Fˣ] :
   have h_infinite_order := infinite_cyclic_group_infinite_order Fˣ
 
   -- Then char F = 2 (use h_infinite_order)
-  haveI : CharP F 2 := sorry
+  haveI : CharP F 2 := by
+    -- First show that -1 has finite order in F*
+    specialize h_infinite_order (-1 : Fˣ)
+    contrapose! h_infinite_order
+    constructor
+    · haveI : ringChar F ≠ 2 := by
+        contrapose! h_infinite_order
+        haveI := ringChar.charP F
+        rw [h_infinite_order] at this
+        exact this
+      -- haveI := CharP.char_is_prime F
+      contrapose! this
+      rw [← neg_one_eq_one_iff]
+      apply_fun (fun x => x.val) at this
+      exact this
+    · simp
+      rw [← orderOf_units]
+      push_cast
+      rw [orderOf_neg_one]
+      haveI : ringChar F ≠ 2 := by
+        intro h_char
+        haveI := ringChar.charP F
+        rw [h_char] at this
+        contradiction
+      simp [this]
 
   -- Then F is finite by H04 and the fact that char 2 + cyclic units implies finite field
   have h_finite : Finite F := finite_of_char_two_cyclic F
