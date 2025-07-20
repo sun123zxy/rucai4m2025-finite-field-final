@@ -1,9 +1,7 @@
 import Mathlib
 
 /-!
-Finite Field Exr. 3.30:
-
-Show that ∑_{d ∣ n} φ(d) / d = φ(n) / n.
+Exercise 3.30: Show that ∑_{d ∣ n} φ(d) / d = φ(n) / n.
 
 We apply the notion of Dirichlet convolution to simplify this formula to μ * id = φ.
 This is by the fact that
@@ -19,13 +17,13 @@ open ArithmeticFunction
 
 /-- Coercion of Euler's totient function from `Nat` to `ArithmeticFunction ℕ`.
     This allows us to use the totient function with Dirichlet convolution operations. -/
-def coe_totient : ArithmeticFunction ℕ :=
+def totient : ArithmeticFunction ℕ :=
   ⟨fun n => n.totient, by simp only [Nat.totient_zero]⟩
 
-notation "φ" => coe_totient
+notation "φ" => totient
 
 /-- The coerced totient function applied to `n` equals `n.totient`. -/
-lemma coe_totient_apply (n : ℕ) : φ n = n.totient := rfl
+@[simp] lemma coe_totient_apply (n : ℕ) : φ n = n.totient := rfl
 
 /-- φ * ζ = id. This is the arithmetic function version of the classical identity
     ∑_{d ∣ n} φ(d) = n. -/

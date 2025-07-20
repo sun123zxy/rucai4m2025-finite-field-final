@@ -1,5 +1,5 @@
 import Mathlib
-/-
+/-!
 Every element of a finite field F of order q is the kth power of some element of F_q
 if and only if k.gcd (q - 1) = 1.
 -/
