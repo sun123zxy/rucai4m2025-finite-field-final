@@ -60,7 +60,7 @@ if and only if $\gcd (q - 1, k) = 1$.
 
   Seemingly there's no one-line proof for this.
 
-  Feedback: `#help tactic lift`
+  Feedback: `#help tactic lift`, `#help tactic rify`
 
 3. Workflow
 
