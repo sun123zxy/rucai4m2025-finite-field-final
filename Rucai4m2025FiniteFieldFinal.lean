@@ -1,1 +1,2 @@
-import Rucai4m2025FiniteFieldFinal.Basic
+import Rucai4m2025FiniteFieldFinal.Arith
+import Rucai4m2025FiniteFieldFinal.Cyclic

@@ -10,9 +10,11 @@ import Mathlib.GroupTheory.SpecificGroups.Cyclic
 import Mathlib.RingTheory.Henselian
 
 /-!
-# Finite Fields with Cyclic Multiplicative Groups
+# Fields with Cyclic Multiplicative Groups is Finite
 
-This file proves that every field with a cyclic multiplicative group is finite.
+This file proves Finite Field Exr. 2.10:
+
+Every field with a cyclic multiplicative group is finite.
 
 ## Main Results
 
@@ -295,3 +297,39 @@ theorem Field.finite_of_cyclic_units (F : Type*) [Field F] [IsCyclic Fˣ] :
 
   -- This contradicts our assumption that F is infinite
   exact h_infinite h_finite
+
+/- Afterwords
+1. Formalization itself sucks, but it leads to a better structure of the proof.
+
+2. Cumbersome type coercions and casts. e.g.
+
+```lean4
+variable (G : Type) [Group G]
+example (g : G) (hg : ∃ n : ℤ, n > 0 → g ^ n = 1) : (∃ n : ℕ, n > 0 → g ^ n = 1) := by sorry
+```
+
+Seemingly there's no one-line proof for this.
+
+3. Workflow?
+
+Collaboration need a fixed roadmap, but the best structure emerges only after some work.
+Plan: Write a human proof, rewrite it into steps, try to decouple it into independent lemmas.
+Code: Set up a roadmap, formalize the statements, then fill the sorrys.
+Adjust the structure accordingly during the process.
+May use a lot of `have`s to structure the proof in the beginning, but should pack them into `lemma`s
+when the time is right.
+
+4. AI
+
+Currently, AI can't:
+
+- finish a proof directly
+- always suggest the right strategy
+
+But with good prompts, AI can:
+
+- provide initial codes to work with, faster than start from scratch
+- help to find relevant Mathlib results (via its often-failing attempts to prove the goal)
+- help to do rotine things, e.g. tidy up, produce docstrings and comments
+- help to structure the proof
+-/
